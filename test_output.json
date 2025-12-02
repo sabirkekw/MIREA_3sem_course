@@ -1,0 +1,267 @@
+{
+  "timestamp": "2025-12-03T01:59:46.191532",
+  "system": {
+    "os_name": "Linux",
+    "os_version": "#1 SMP PREEMPT_DYNAMIC Debian 6.12.57-1 (2025-11-05)",
+    "architecture": "64bit",
+    "hostname": "jhnprk",
+    "username": "sabirkekw",
+    "boot_time": "2025-11-27T11:47:38"
+  },
+  "cpu": {
+    "name": "Intel(R) Core(TM) 5 220H",
+    "physical_cores": 12,
+    "logical_cores": 16,
+    "usage_percent": 6.9,
+    "frequency_current": 656.7308125000001,
+    "frequency_min": 400.0,
+    "frequency_max": 4300.0
+  },
+  "memory": {
+    "total": 16484769792,
+    "available": 1249218560,
+    "used": 15235551232,
+    "free": 390008832,
+    "usage_percent": 92.4
+  },
+  "disks": [
+    {
+      "device": "/dev/nvme0n1p2",
+      "mountpoint": "/",
+      "filesystem": "ext4",
+      "total": 989345705984,
+      "used": 27694456832,
+      "free": 911319760896,
+      "usage_percent": 2.9
+    },
+    {
+      "device": "/dev/nvme0n1p1",
+      "mountpoint": "/boot/efi",
+      "filesystem": "vfat",
+      "total": 1021394944,
+      "used": 9199616,
+      "free": 1012195328,
+      "usage_percent": 0.9
+    }
+  ],
+  "network_interfaces": [
+    {
+      "name": "lo",
+      "ip_address": "",
+      "mac_address": "",
+      "status": "Up"
+    },
+    {
+      "name": "wlp0s20f3",
+      "ip_address": "192.168.0.92",
+      "mac_address": "70:08:10:3e:16:f6",
+      "status": "Up"
+    },
+    {
+      "name": "br-c31082b70133",
+      "ip_address": "172.18.0.1",
+      "mac_address": "9a:71:5c:ee:5a:c1",
+      "status": "Up"
+    },
+    {
+      "name": "docker0",
+      "ip_address": "172.17.0.1",
+      "mac_address": "5e:a5:ab:21:12:41",
+      "status": "Down"
+    },
+    {
+      "name": "veth7ab2779",
+      "ip_address": "",
+      "mac_address": "de:b8:38:95:36:33",
+      "status": "Up"
+    },
+    {
+      "name": "veth065434a",
+      "ip_address": "",
+      "mac_address": "ca:c3:c0:53:b3:de",
+      "status": "Up"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 1,
+      "name": "systemd",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.08475372223141568,
+      "memory_rss": 13971456,
+      "status": "sleeping"
+    },
+    {
+      "pid": 2,
+      "name": "kthreadd",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 3,
+      "name": "pool_workqueue_release",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 4,
+      "name": "kworker/R-kvfree_rcu_reclaim",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 5,
+      "name": "kworker/R-rcu_gp",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 6,
+      "name": "kworker/R-sync_wq",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 7,
+      "name": "kworker/R-slub_flushwq",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 8,
+      "name": "kworker/R-netns",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 10,
+      "name": "kworker/0:0H-events_highpri",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 13,
+      "name": "kworker/R-mm_percpu_wq",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 14,
+      "name": "rcu_tasks_kthread",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 15,
+      "name": "rcu_tasks_rude_kthread",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 16,
+      "name": "rcu_tasks_trace_kthread",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 17,
+      "name": "ksoftirqd/0",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 18,
+      "name": "rcu_preempt",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 19,
+      "name": "rcu_exp_par_gp_kthread_worker/0",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 20,
+      "name": "rcu_exp_gp_kthread_worker",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 21,
+      "name": "migration/0",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 22,
+      "name": "idle_inject/0",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    },
+    {
+      "pid": 23,
+      "name": "cpuhp/0",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "sleeping"
+    }
+  ]
+}
