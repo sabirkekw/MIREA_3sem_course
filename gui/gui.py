@@ -11,10 +11,9 @@ from datetime import datetime
 from gui.main_window import MainWindow
 from core.collector import DataCollectorManager
 from utils.formatters import format_bytes, format_percent
+from exporters.manager import ExportManager
 
 class SystemInfoApp:
-    """Основной класс приложения с интеграцией backend"""
-    
     def __init__(self, root):
         self.root = root
         self.root.title("Системный монитор v1.0")
@@ -25,6 +24,8 @@ class SystemInfoApp:
         self.is_collecting = False
         self.collection_thread = None
         self.current_snapshot = None
+
+        self.export_manager = ExportManager()
         
         self.main_window = MainWindow(self.root, self)
         
@@ -102,15 +103,23 @@ class SystemInfoApp:
             return
         
         format_choice = self.main_window.get_export_format()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"system_info_{timestamp}.{format_choice.lower()}"
         
-        self.main_window.show_info(
-            "Экспорт данных",
-            f"Данные успешно экспортированы в формате {format_choice}\n"
-            f"Файл: {filename}\n\n"
-            f"В следующей версии будет реализован реальный экспорт."
+        result = self.export_manager.export(
+            snapshot=self.current_snapshot,
+            format_type=format_choice
         )
+        
+        if result['success']:
+            self.main_window.show_info(
+                "Экспорт данных",
+                f"Данные успешно экспортированы в формате {format_choice}\n"
+                f"Файл: {result.get('filename', result.get('filepath', 'N/A'))}"
+            )
+            self.main_window.update_status(f"Данные экспортированы в {format_choice}")
+        else:
+            self.main_window.show_warning(
+                f"Ошибка экспорта в {format_choice}:\n{result.get('error', 'Неизвестная ошибка')}"
+            )
     
     def kill_process(self, pid, name):
         import psutil
