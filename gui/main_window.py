@@ -10,14 +10,15 @@ class MainWindow:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-
-        self.style = ttk.Style()
-        self.style.configure("Treeview", rowheight=35)
         
         self.menu = MenuBar(root, app)
         self.toolbar = Toolbar(root, app)
         self.notebook = MainNotebook(root, app)
         self.statusbar = StatusBar(root, app)
+
+        style = ttk.Style()
+        style.configure("Treeview", rowheight=35)
+
     
     def update_status(self, text):
         self.statusbar.update_status(text)
@@ -34,8 +35,8 @@ class MainWindow:
     def get_export_format(self):
         return self.toolbar.get_export_format()
     
-    def update_all_tabs(self):
-        self.notebook.update_all_tabs()
+    def update_all_tabs(self, snapshot):
+        self.notebook.update_all_tabs(snapshot)
     
     def show_info(self, title, message):
         messagebox.showinfo(title, message)

@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 
-# Импортируем вкладки
 from gui.tabs.system_tab import SystemTab
 from gui.tabs.hardware_tab import HardwareTab
 from gui.tabs.disk_tab import DiskTab
@@ -32,6 +31,7 @@ class MainNotebook:
         for name, tab in self.tabs.items():
             self.notebook.add(tab.frame, text=tab.title)
     
-    def update_all_tabs(self):
+    def update_all_tabs(self, snapshot):
         for tab in self.tabs.values():
-            tab.update_data()
+            if hasattr(tab, 'update_with_snapshot'):
+                tab.update_with_snapshot(snapshot)

@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from utils.formatters import format_bytes, format_percent
 
 class DiskTab:
     def __init__(self, parent, app):
@@ -10,10 +11,10 @@ class DiskTab:
     
     def create_tab(self):
         self.frame = ttk.Frame(self.parent)
-
+        
         self.frame.grid_rowconfigure(0, weight=1)
         self.frame.grid_columnconfigure(0, weight=1)
-
+        
         self.create_disk_table()
         
         self.create_io_section()
@@ -26,15 +27,12 @@ class DiskTab:
         tree_frame.grid_rowconfigure(0, weight=1)
         tree_frame.grid_columnconfigure(0, weight=1)
         
-        style = ttk.Style()
-        style.configure("Disk.Treeview", rowheight=35)
         
         self.disk_tree = ttk.Treeview(
             tree_frame, 
             columns=columns, 
             show='headings', 
             height=8,
-            style="Disk.Treeview"
         )
         
         col_widths = [80, 100, 100, 100, 100, 100, 150]
@@ -49,38 +47,71 @@ class DiskTab:
         
         self.disk_tree.grid(row=0, column=0, sticky='nsew')
         scrollbar.grid(row=0, column=1, sticky='ns')
-        
-        # Заполняем тестовыми данными
-        sample_data = [
-            ('C:', 'SSD', '476.9 GB', '298.4 GB', '178.5 GB', '62%', 'NTFS'),
-            ('D:', 'HDD', '931.5 GB', '412.3 GB', '519.2 GB', '44%', 'NTFS'),
-            ('E:', 'HDD', '465.7 GB', '89.2 GB', '376.5 GB', '19%', 'NTFS'),
-        ]
-        
-        for item in sample_data:
-            self.disk_tree.insert('', tk.END, values=item)
     
     def create_io_section(self):
-        io_frame = ttk.LabelFrame(self.frame, text="Статистика ввода-вывода")
-        io_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
+        self.io_frame = ttk.LabelFrame(self.frame, text="Статистика ввода-вывода")
+        self.io_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
         
-        # Создаем метки для статистики
         self.io_labels = {}
-        io_info = [
-            ("read", "Прочитано:", "15.2 GB"),
-            ("written", "Записано:", "8.7 GB"),
-            ("read_speed", "Скорость чтения:", "120 MB/s"),
-            ("write_speed", "Скорость записи:", "65 MB/s"),
+        io_fields = [
+            ("total_space", "Общий объем:"),
+            ("used_space", "Использовано:"),
+            ("free_space", "Свободно:"),
+            ("partitions", "Разделы:"),
         ]
         
-        for i, (key, label, value) in enumerate(io_info):
+        for i, (key, label) in enumerate(io_fields):
             if i % 2 == 0:
-                row_frame = ttk.Frame(io_frame)
+                row_frame = ttk.Frame(self.io_frame)
                 row_frame.pack(fill=tk.X, padx=10, pady=5)
             
             ttk.Label(row_frame, text=label, width=20, anchor="w").pack(side=tk.LEFT, padx=10)
-            self.io_labels[key] = ttk.Label(row_frame, text=value)
+            self.io_labels[key] = ttk.Label(row_frame, text="")
             self.io_labels[key].pack(side=tk.LEFT, padx=10)
     
     def update_data(self):
         pass
+    
+    def update_with_snapshot(self, snapshot):
+        if not snapshot:
+            return
+        
+        for item in self.disk_tree.get_children():
+            self.disk_tree.delete(item)
+        
+        total_space = 0
+        used_space = 0
+        free_space = 0
+        
+        for disk in snapshot.disks:
+            self.disk_tree.insert('', tk.END, values=(
+                disk.device,
+                self._get_disk_type(disk.filesystem),
+                format_bytes(disk.total),
+                format_bytes(disk.used),
+                format_bytes(disk.free),
+                f"{disk.usage_percent:.1f}%",
+                disk.filesystem
+            ))
+            
+            total_space += disk.total
+            used_space += disk.used
+            free_space += disk.free
+        
+        self.io_labels['total_space'].config(text=format_bytes(total_space))
+        self.io_labels['used_space'].config(text=format_bytes(used_space))
+        self.io_labels['free_space'].config(text=format_bytes(free_space))
+        self.io_labels['partitions'].config(text=str(len(snapshot.disks)))
+    
+    def _get_disk_type(self, filesystem):
+        fs_lower = filesystem.lower()
+        if fs_lower in ['ext4', 'ext3', 'ext2', 'xfs', 'btrfs']:
+            return 'Linux'
+        elif fs_lower in ['ntfs', 'fat32', 'exfat']:
+            return 'Windows'
+        elif fs_lower == 'vfat':
+            return 'EFI'
+        elif fs_lower == 'apfs':
+            return 'macOS'
+        else:
+            return 'Other'

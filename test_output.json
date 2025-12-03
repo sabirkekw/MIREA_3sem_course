@@ -1,28 +1,28 @@
 {
-  "timestamp": "2025-12-03T01:59:46.191532",
+  "timestamp": "2025-12-03T13:38:33.338357",
   "system": {
     "os_name": "Linux",
     "os_version": "#1 SMP PREEMPT_DYNAMIC Debian 6.12.57-1 (2025-11-05)",
     "architecture": "64bit",
     "hostname": "jhnprk",
     "username": "sabirkekw",
-    "boot_time": "2025-11-27T11:47:38"
+    "boot_time": "2025-12-03T13:37:19"
   },
   "cpu": {
     "name": "Intel(R) Core(TM) 5 220H",
     "physical_cores": 12,
     "logical_cores": 16,
-    "usage_percent": 6.9,
-    "frequency_current": 656.7308125000001,
+    "usage_percent": 19.3,
+    "frequency_current": 1531.6059375,
     "frequency_min": 400.0,
     "frequency_max": 4300.0
   },
   "memory": {
-    "total": 16484769792,
-    "available": 1249218560,
-    "used": 15235551232,
-    "free": 390008832,
-    "usage_percent": 92.4
+    "total": 16484777984,
+    "available": 10895433728,
+    "used": 5589344256,
+    "free": 8652083200,
+    "usage_percent": 33.9
   },
   "disks": [
     {
@@ -30,8 +30,8 @@
       "mountpoint": "/",
       "filesystem": "ext4",
       "total": 989345705984,
-      "used": 27694456832,
-      "free": 911319760896,
+      "used": 27545038848,
+      "free": 911469178880,
       "usage_percent": 2.9
     },
     {
@@ -53,32 +53,32 @@
     },
     {
       "name": "wlp0s20f3",
-      "ip_address": "192.168.0.92",
+      "ip_address": "10.192.212.206",
       "mac_address": "70:08:10:3e:16:f6",
       "status": "Up"
     },
     {
       "name": "br-c31082b70133",
       "ip_address": "172.18.0.1",
-      "mac_address": "9a:71:5c:ee:5a:c1",
+      "mac_address": "7e:43:56:ee:b6:19",
       "status": "Up"
     },
     {
       "name": "docker0",
       "ip_address": "172.17.0.1",
-      "mac_address": "5e:a5:ab:21:12:41",
+      "mac_address": "e6:9c:e6:d2:e1:9c",
       "status": "Down"
     },
     {
-      "name": "veth7ab2779",
+      "name": "veth21fa104",
       "ip_address": "",
-      "mac_address": "de:b8:38:95:36:33",
+      "mac_address": "2e:a6:a7:c6:49:be",
       "status": "Up"
     },
     {
-      "name": "veth065434a",
+      "name": "vethf49bbed",
       "ip_address": "",
-      "mac_address": "ca:c3:c0:53:b3:de",
+      "mac_address": "16:e2:69:33:d2:74",
       "status": "Up"
     }
   ],
@@ -88,8 +88,8 @@
       "name": "systemd",
       "username": "root",
       "cpu_percent": 0.0,
-      "memory_percent": 0.08475372223141568,
-      "memory_rss": 13971456,
+      "memory_percent": 0.09148726185234622,
+      "memory_rss": 15081472,
       "status": "sleeping"
     },
     {
@@ -156,8 +156,35 @@
       "status": "idle"
     },
     {
+      "pid": 9,
+      "name": "kworker/0:0-rcu_gp",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
       "pid": 10,
       "name": "kworker/0:0H-events_highpri",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 11,
+      "name": "kworker/0:1-events",
+      "username": "root",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.0,
+      "memory_rss": 0,
+      "status": "idle"
+    },
+    {
+      "pid": 12,
+      "name": "kworker/u64:0-events_unbound",
       "username": "root",
       "cpu_percent": 0.0,
       "memory_percent": 0.0,
@@ -230,33 +257,6 @@
     {
       "pid": 20,
       "name": "rcu_exp_gp_kthread_worker",
-      "username": "root",
-      "cpu_percent": 0.0,
-      "memory_percent": 0.0,
-      "memory_rss": 0,
-      "status": "sleeping"
-    },
-    {
-      "pid": 21,
-      "name": "migration/0",
-      "username": "root",
-      "cpu_percent": 0.0,
-      "memory_percent": 0.0,
-      "memory_rss": 0,
-      "status": "sleeping"
-    },
-    {
-      "pid": 22,
-      "name": "idle_inject/0",
-      "username": "root",
-      "cpu_percent": 0.0,
-      "memory_percent": 0.0,
-      "memory_rss": 0,
-      "status": "sleeping"
-    },
-    {
-      "pid": 23,
-      "name": "cpuhp/0",
       "username": "root",
       "cpu_percent": 0.0,
       "memory_percent": 0.0,

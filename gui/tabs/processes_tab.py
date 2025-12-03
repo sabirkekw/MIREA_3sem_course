@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, scrolledtext
-import random
 
 class ProcessesTab:
     def __init__(self, parent, app):
@@ -60,20 +59,7 @@ class ProcessesTab:
         self.process_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         
-        # Заполняем тестовыми данными
-        sample_processes = [
-            (1245, 'chrome.exe', 'user', 45.2, 25.3, 1250, 'Выполняется'),
-            (892, 'python.exe', 'user', 32.1, 12.4, 612, 'Выполняется'),
-            (1567, 'Code.exe', 'user', 15.7, 18.9, 932, 'Выполняется'),
-            (223, 'svchost.exe', 'SYSTEM', 5.2, 3.1, 152, 'Выполняется'),
-            (478, 'explorer.exe', 'user', 3.8, 8.4, 415, 'Выполняется'),
-            (912, 'Discord.exe', 'user', 12.6, 15.2, 750, 'Выполняется'),
-            (335, 'steam.exe', 'user', 8.9, 22.1, 1090, 'Выполняется'),
-            (667, 'Spotify.exe', 'user', 6.3, 9.8, 482, 'Выполняется'),
-        ]
-        
-        for proc in sample_processes:
-            self.process_tree.insert('', tk.END, values=proc)
+        self.process_tree.bind('<Double-1>', self.on_process_double_click)
     
     def create_control_buttons(self):
         btn_frame = ttk.Frame(self.frame)
@@ -94,18 +80,49 @@ class ProcessesTab:
         ).pack(side=tk.LEFT, padx=5)
     
     def update_data(self):
-        # Заглушка - обновляем статус
-        self.app.main_window.update_status("Список процессов обновлен")
+        self.app.update_all_data()
+    
+    def update_with_snapshot(self, snapshot):
+        if not snapshot:
+            return
+        
+        for item in self.process_tree.get_children():
+            self.process_tree.delete(item)
+        
+        try:
+            max_processes = int(self.process_count.get())
+        except:
+            max_processes = 20
+
+        processes = snapshot.processes
+        
+        processes.sort(key=lambda x: x.cpu_percent, reverse=True)
+        
+        for i, process in enumerate(processes[:max_processes]):
+            memory_mb = process.memory_rss / (1024 * 1024)
+            self.process_tree.insert('', tk.END, values=(
+                process.pid,
+                process.name[:30],
+                process.username,
+                f"{process.cpu_percent:.1f}",
+                f"{process.memory_percent:.1f}",
+                f"{memory_mb:.1f}",
+                process.status
+            ))
     
     def sort_processes(self, column):
         pass
+    
+    def on_process_double_click(self, event):
+        self.show_process_details()
     
     def kill_process(self):
         selection = self.process_tree.selection()
         if selection:
             item = self.process_tree.item(selection[0])
-            pid = item['values'][0]
-            name = item['values'][1]
+            values = item['values']
+            pid = values[0]
+            name = values[1]
             
             if self.app.kill_process(pid, name):
                 self.process_tree.delete(selection[0])
@@ -124,14 +141,14 @@ class ProcessesTab:
             detail_window.geometry("400x300")
             
             info_text = f"""
-                        PID: {values[0]}
-                        Имя: {values[1]}
-                        Пользователь: {values[2]}
-                        Использование CPU: {values[3]}%
-                        Использование памяти: {values[4]}%
-                        Память: {values[5]} MB
-                        Состояние: {values[6]}
-                        """
+            PID: {values[0]}
+            Имя: {values[1]}
+            Пользователь: {values[2]}
+            Использование CPU: {values[3]}%
+            Использование памяти: {values[4]}%
+            Память: {values[5]} MB
+            Состояние: {values[6]}
+            """
             
             text_widget = scrolledtext.ScrolledText(detail_window, wrap=tk.WORD)
             text_widget.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)

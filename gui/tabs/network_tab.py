@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from utils.formatters import format_bytes
 
 class NetworkTab:
     def __init__(self, parent, app):
@@ -18,76 +19,118 @@ class NetworkTab:
         self.create_network_stats()
     
     def create_network_info(self):
-        info_frame = ttk.LabelFrame(self.frame, text="Сетевая информация")
-        info_frame.pack(fill=tk.X, padx=10, pady=10)
+        self.info_frame = ttk.LabelFrame(self.frame, text="Сетевая информация")
+        self.info_frame.pack(fill=tk.X, padx=10, pady=10)
         
         self.network_labels = {}
-        network_info = [
-            ("ip", "IP адрес:", "192.168.1.100"),
-            ("mask", "Маска подсети:", "255.255.255.0"),
-            ("gateway", "Шлюз по умолчанию:", "192.168.1.1"),
-            ("dns", "DNS сервер:", "8.8.8.8"),
-            ("external_ip", "Внешний IP:", "89.108.76.54"),
-            ("hostname", "Имя хоста:", "DESKTOP-ABC123"),
+        network_fields = [
+            ("hostname", "Имя хоста:"),
+            ("ip", "Основной IP:"),
+            ("external_ip", "Внешний IP:"),
+            ("fqdn", "Полное имя домена:"),
         ]
         
-        for key, label, value in network_info:
-            row = ttk.Frame(info_frame)
+        for key, label in network_fields:
+            row = ttk.Frame(self.info_frame)
             row.pack(fill=tk.X, padx=10, pady=5)
             ttk.Label(row, text=label, width=25, anchor="w").pack(side=tk.LEFT)
-            self.network_labels[key] = ttk.Label(row, text=value, anchor="w")
+            self.network_labels[key] = ttk.Label(row, text="", anchor="w")
             self.network_labels[key].pack(side=tk.LEFT)
     
     def create_interfaces_table(self):
         iface_frame = ttk.LabelFrame(self.frame, text="Сетевые интерфейсы")
         iface_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        columns = ('Интерфейс', 'Состояние', 'IP адрес', 'MAC адрес', 'Скорость')
+        columns = ('Интерфейс', 'Тип', 'IP адрес', 'MAC адрес', 'Состояние')
         
         tree_frame = ttk.Frame(iface_frame)
         tree_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
         self.network_tree = ttk.Treeview(tree_frame, columns=columns, show='headings', height=4)
         
-        for col in columns:
+        col_widths = [120, 80, 120, 120, 80]
+        for col, width in zip(columns, col_widths):
             self.network_tree.heading(col, text=col)
-            self.network_tree.column(col, width=120)
+            self.network_tree.column(col, width=width)
         
         scrollbar = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.network_tree.yview)
         self.network_tree.configure(yscrollcommand=scrollbar.set)
         
         self.network_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        
-        sample_ifaces = [
-            ('Ethernet', 'Подключен', '192.168.1.100', '00-1A-2B-3C-4D-5E', '1 Gbps'),
-            ('Wi-Fi', 'Подключен', '192.168.1.101', '00-1A-2B-3C-4D-5F', '300 Mbps'),
-            ('Bluetooth', 'Отключен', 'Нет', '00-1A-2B-3C-4D-60', 'N/A'),
-        ]
-        
-        for item in sample_ifaces:
-            self.network_tree.insert('', tk.END, values=item)
     
     def create_network_stats(self):
-        stats_frame = ttk.LabelFrame(self.frame, text="Сетевая статистика")
-        stats_frame.pack(fill=tk.X, padx=10, pady=10)
+        self.stats_frame = ttk.LabelFrame(self.frame, text="Сетевая статистика")
+        self.stats_frame.pack(fill=tk.X, padx=10, pady=10)
         
         self.stats_labels = {}
-        stats_info = [
-            ("sent", "Отправлено:", "2.4 GB"),
-            ("received", "Получено:", "5.7 GB"),
-            ("send_speed", "Текущая отправка:", "1.2 MB/s"),
-            ("receive_speed", "Текущее получение:", "0.8 MB/s"),
+        stats_fields = [
+            ("sent", "Отправлено:"),
+            ("received", "Получено:"),
+            ("packets_sent", "Пакетов отправлено:"),
+            ("packets_recv", "Пакетов получено:"),
         ]
         
-        for i, (key, label, value) in enumerate(stats_info):
+        for i, (key, label) in enumerate(stats_fields):
             if i % 2 == 0:
-                row_frame = ttk.Frame(stats_frame)
+                row_frame = ttk.Frame(self.stats_frame)
                 row_frame.pack(fill=tk.X, padx=10, pady=5)
             
             ttk.Label(row_frame, text=label, width=20, anchor="w").pack(side=tk.LEFT, padx=10)
-            self.stats_labels[key] = ttk.Label(row_frame, text=value)
+            self.stats_labels[key] = ttk.Label(row_frame, text="")
             self.stats_labels[key].pack(side=tk.LEFT, padx=10)
     
     def update_data(self):
         pass
+    
+    def update_with_snapshot(self, snapshot):
+        if not snapshot:
+            return
+        
+        system = snapshot.system
+        self.network_labels['hostname'].config(text=system.hostname)
+        self.network_labels['fqdn'].config(text=system.hostname)
+        
+        main_ip = ""
+        for interface in snapshot.network_interfaces:
+            if interface.ip_address and interface.ip_address not in ['127.0.0.1', '127.0.1.1']:
+                main_ip = interface.ip_address
+                break
+        
+        self.network_labels['ip'].config(text=main_ip)
+        self.network_labels['external_ip'].config(text="(требуется интернет)")
+        
+        for item in self.network_tree.get_children():
+            self.network_tree.delete(item)
+        
+        for interface in snapshot.network_interfaces:
+            iface_type = self._get_interface_type(interface.name)
+            self.network_tree.insert('', tk.END, values=(
+                interface.name,
+                iface_type,
+                interface.ip_address if interface.ip_address else "N/A",
+                interface.mac_address if interface.mac_address else "N/A",
+                interface.status
+            ))
+        
+        self.stats_labels['sent'].config(text="N/A")
+        self.stats_labels['received'].config(text="N/A")
+        self.stats_labels['packets_sent'].config(text="N/A")
+        self.stats_labels['packets_recv'].config(text="N/A")
+    
+    def _get_interface_type(self, name):
+        name_lower = name.lower()
+        if 'eth' in name_lower or 'enp' in name_lower or 'eno' in name_lower:
+            return 'Ethernet'
+        elif 'wlan' in name_lower or 'wlp' in name_lower or 'wifi' in name_lower:
+            return 'Wi-Fi'
+        elif 'lo' == name_lower:
+            return 'Loopback'
+        elif 'docker' in name_lower:
+            return 'Docker'
+        elif 'br-' in name_lower:
+            return 'Bridge'
+        elif 'veth' in name_lower:
+            return 'Virtual'
+        else:
+            return 'Unknown'
