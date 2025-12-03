@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from utils.formatters import format_bytes, format_percent
+from utils.chart import SimpleChart
 
 class HardwareTab:
     def __init__(self, parent, app):
@@ -54,31 +55,37 @@ class HardwareTab:
         graph_frame = ttk.LabelFrame(self.frame, text="История использования")
         graph_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        self.graph_placeholder = tk.Canvas(graph_frame, bg='#f0f0f0', height=200)
-        self.graph_placeholder.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.chart_canvas = tk.Canvas(
+            graph_frame,
+            bg='#f0f0f0',
+            height=200,
+            highlightthickness=0
+        )
+        self.chart_canvas.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
         
-        def draw_centered_text():
-            width = self.graph_placeholder.winfo_width()
-            height = self.graph_placeholder.winfo_height()
-            
-            if width < 10:
-                width = 400
-                height = 200
-            
-            self.graph_placeholder.delete("all")
-            self.graph_placeholder.create_text(
-                width // 2,
-                height // 2,
-                text="График загрузки CPU и памяти\n(будет реализован в следующей версии)",
-                font=("Arial", 10),
-                fill="gray",
-                anchor="center",
-                justify="center"
-            )
+        self.chart = SimpleChart(self.chart_canvas, width=3300, height=1200)
         
-        self.graph_placeholder.bind("<Configure>", lambda e: draw_centered_text())
-        draw_centered_text()
-    
+        control_frame = ttk.Frame(graph_frame)
+        control_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
+        
+        ttk.Button(
+            control_frame,
+            text="Очистить график",
+            command=self.clear_chart,
+            width=15
+        ).pack(side=tk.LEFT)
+        
+        self.auto_chart_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(
+            control_frame,
+            text="Автообновление графика",
+            variable=self.auto_chart_var
+        ).pack(side=tk.RIGHT)
+
+    def clear_chart(self):
+        if hasattr(self, 'chart'):
+            self.chart.clear()
+        
     def update_data(self):
         pass
     
@@ -105,3 +112,7 @@ class HardwareTab:
         
         mem_info = f"Доступно: {format_bytes(memory.available)} | Свободно: {format_bytes(memory.free)}"
         self.mem_info_label.config(text=mem_info)
+        
+
+        if hasattr(self, 'chart') and self.auto_chart_var.get():
+            self.chart.add_data_point(cpu_usage, mem_usage)
